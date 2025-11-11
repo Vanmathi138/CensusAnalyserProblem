@@ -10,21 +10,22 @@ import java.util.Iterator;
 
 public class StateCensusAnalyserTest {
 
-	private static final String WRONG_CSV_FILE_PATH = "IndiaStateCensusDataa.csv";
+	private static final String WRONG_FILE_TYPE_PATH = "IndiaStateCensusData.txt"; // ❌ not .csv
 
     @Test
-    public void givenStateCensusCSVFile_WhenIncorrectPath_ShouldThrowCustomException() {
+    public void givenStateCensusCSVFile_WhenTypeIncorrect_ShouldThrowCustomException() {
         StateCensusAnalyser analyser = new StateCensusAnalyser();
 
         CensusAnalyserException thrown = Assertions.assertThrows(
                 CensusAnalyserException.class,
-                () -> analyser.loadCensusData(WRONG_CSV_FILE_PATH),
-                "Expected CensusAnalyserException but didn't get one"
+                () -> analyser.loadCensusData(WRONG_FILE_TYPE_PATH),
+                "Expected CensusAnalyserException but did not get one"
         );
 
         Assertions.assertEquals(
-                CensusAnalyserException.ExceptionType.FILE_NOT_FOUND,
-                thrown.type
+                CensusAnalyserException.ExceptionType.INVALID_FILE_TYPE,
+                thrown.type,
+                "Expected INVALID_FILE_TYPE exception"
         );
     }
 }
