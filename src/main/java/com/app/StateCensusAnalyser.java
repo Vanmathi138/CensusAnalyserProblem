@@ -2,15 +2,18 @@ package com.app;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.app.exception.CensusAnalyserException;
 
 public class StateCensusAnalyser {
 
     private List<CSVStateCensus> censusList = new ArrayList<>();
 
-    public Iterator<CSVStateCensus> loadCensusData(String csvFilePath) {
+    public Iterator<CSVStateCensus> loadCensusData(String csvFilePath) throws CensusAnalyserException {
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             boolean headerSkipped = false;
@@ -30,8 +33,12 @@ public class StateCensusAnalyser {
                 CSVStateCensus census = new CSVStateCensus(state, population, area, density);
                 censusList.add(census);
             }
+        } catch (IOException e) {
+            throw new CensusAnalyserException("File not found or cannot be opened",
+                    CensusAnalyserException.ExceptionType.FILE_NOT_FOUND);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CensusAnalyserException("Unable to parse CSV file",
+                    CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
         return censusList.iterator();
     }

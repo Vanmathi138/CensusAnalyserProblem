@@ -1,6 +1,7 @@
 package com.app.test;
 
 import com.app.StateCensusAnalyser;
+import com.app.exception.CensusAnalyserException;
 import com.app.CSVStateCensus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -9,21 +10,21 @@ import java.util.Iterator;
 
 public class StateCensusAnalyserTest {
 
-    private static final String CENSUS_CSV_FILE_PATH = "IndiaStateCensusData.csv";
+	private static final String WRONG_CSV_FILE_PATH = "IndiaStateCensusDataa.csv";
 
     @Test
-    public void givenStateCensusCSVFile_WhenRead_ShouldReturnCorrectNumberOfRecords() {
+    public void givenStateCensusCSVFile_WhenIncorrectPath_ShouldThrowCustomException() {
         StateCensusAnalyser analyser = new StateCensusAnalyser();
-        Iterator<CSVStateCensus> iterator = analyser.loadCensusData(CENSUS_CSV_FILE_PATH);
 
-        int actualRecordCount = 0;
-        while (iterator.hasNext()) {
-            iterator.next();
-            actualRecordCount++;
-        }
+        CensusAnalyserException thrown = Assertions.assertThrows(
+                CensusAnalyserException.class,
+                () -> analyser.loadCensusData(WRONG_CSV_FILE_PATH),
+                "Expected CensusAnalyserException but didn't get one"
+        );
 
-        int expectedRecordCount = 4; 
-        Assertions.assertEquals(expectedRecordCount, actualRecordCount,
-                "Record count does not match!");
+        Assertions.assertEquals(
+                CensusAnalyserException.ExceptionType.FILE_NOT_FOUND,
+                thrown.type
+        );
     }
 }

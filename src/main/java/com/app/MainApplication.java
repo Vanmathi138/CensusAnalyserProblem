@@ -2,8 +2,10 @@ package com.app;
 
 import java.util.*;
 
+import com.app.exception.CensusAnalyserException;
+
 public class MainApplication {
-	public static void main(String[] ardgs) {
+	public static void main(String[] ardgs) throws CensusAnalyserException {
 		String csvFilePath = "IndiaStateCensusData.csv";
         StateCensusAnalyser analyser = new StateCensusAnalyser();
 
