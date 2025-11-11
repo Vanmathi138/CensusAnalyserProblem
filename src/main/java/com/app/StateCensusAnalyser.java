@@ -14,6 +14,11 @@ public class StateCensusAnalyser {
     private List<CSVStateCensus> censusList = new ArrayList<>();
 
     public Iterator<CSVStateCensus> loadCensusData(String csvFilePath) throws CensusAnalyserException {
+    	if (!csvFilePath.endsWith(".csv")) {
+            throw new CensusAnalyserException("Invalid file type. Expected CSV file.",
+                    CensusAnalyserException.ExceptionType.INVALID_FILE_TYPE);
+        }
+
         try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
             String line;
             boolean headerSkipped = false;
