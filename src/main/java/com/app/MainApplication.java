@@ -12,6 +12,7 @@ public class MainApplication {
        
         Iterator<CSVStateCensus> iterator = analyser.loadCensusData(csvFilePath);
 
+        
         while (iterator.hasNext()) {
             System.out.println(iterator.next());
         }	}

@@ -29,6 +29,10 @@ public class StateCensusAnalyser {
                 }
                 
                 String[] data = line.split(",");
+                if (data.length != 4) {
+                    throw new CensusAnalyserException("Incorrect delimiter in file.",
+                            CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER);
+                }
                 String state = data[0].trim().replaceAll("\"", "");
                 int population = Integer.parseInt(data[1].trim().replaceAll("\"", ""));
                 int area = Integer.parseInt(data[2].trim().replaceAll("\"", ""));
@@ -41,7 +45,9 @@ public class StateCensusAnalyser {
         } catch (IOException e) {
             throw new CensusAnalyserException("File not found or cannot be opened",
                     CensusAnalyserException.ExceptionType.FILE_NOT_FOUND);
-        } catch (Exception e) {
+        }catch (CensusAnalyserException e) {
+            throw e;
+        }catch (Exception e) {
             throw new CensusAnalyserException("Unable to parse CSV file",
                     CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
