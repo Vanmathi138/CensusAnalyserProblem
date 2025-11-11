@@ -6,6 +6,7 @@ public class CensusAnalyserException extends Exception {
         FILE_NOT_FOUND,
         INVALID_FILE_TYPE,
         UNABLE_TO_PARSE,
+        INCORRECT_DELIMITER
     }
 
     public ExceptionType type;
@@ -14,4 +15,5 @@ public class CensusAnalyserException extends Exception {
         super(message);
         this.type = type;
     }
+    
 }
