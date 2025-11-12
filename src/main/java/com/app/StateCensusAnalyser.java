@@ -46,5 +46,6 @@ public class StateCensusAnalyser {
 	        throw new CensusAnalyserException("Invalid number format", CensusAnalyserException.ExceptionType.INCORRECT_TYPE);
 	    }
 	}
+	
+	}
 
-}

@@ -8,7 +8,8 @@ public class CensusAnalyserException extends Exception {
         UNABLE_TO_PARSE,
         INCORRECT_DELIMITER,
         INCORRECT_HEADER,
-        INCORRECT_TYPE
+        INCORRECT_TYPE,
+        INVALID_TYPE
     }
 
     public ExceptionType type;

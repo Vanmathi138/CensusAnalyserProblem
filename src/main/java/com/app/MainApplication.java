@@ -6,13 +6,21 @@ import com.app.exception.CensusAnalyserException;
 
 public class MainApplication {
 	public static void main(String[] ardgs) throws CensusAnalyserException {
-		String csvFilePath = "IndiaStateCensusData.csv";
-		StateCensusAnalyser analyser = new StateCensusAnalyser();
+		String csvFilePath = "src/test/resources/IndiaStateCode.csv";
 
-		// Iterator<CSVStateCensus> iterator = analyser.loadCensusData(csvFilePath);
+        try {
+            StateCodeAnalyser analyser = new StateCodeAnalyser();
+            List<CSVStates> stateList = analyser.loadStateCodeData(csvFilePath);
 
-//		while (iterator.hasNext()) {
-//			System.out.println(iterator.next());
-//		}
-	}
+            System.out.println("Number of records = " + stateList.size());
+
+  
+            for (CSVStates state : stateList) {
+                System.out.println(state);
+            }
+
+        } catch (CensusAnalyserException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
 }
