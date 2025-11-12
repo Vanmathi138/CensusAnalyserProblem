@@ -12,19 +12,16 @@ public class StateCensusAnalyserTest {
 
 	private static final String WRONG_DELIMITER_FILE_PATH = "src/test/resources/IndiaStateCensusDataWrongDelimiter.csv";
 
-    @Test
-    public void givenStateCensusCSVFile_WhenDelimiterIncorrect_ShouldThrowCustomException() {
-        StateCensusAnalyser analyser = new StateCensusAnalyser();
-        CensusAnalyserException thrown = Assertions.assertThrows(
-                CensusAnalyserException.class,
-                () -> analyser.loadCensusData(WRONG_DELIMITER_FILE_PATH),
-                "Expected CensusAnalyserException but did not get one"
-        );
+	 @Test
+	    public void givenStateCensusCSVFile_WhenHeaderIncorrect_ShouldThrowCustomException() {
+	        StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
 
-        Assertions.assertEquals(
-                CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER,
-                thrown.type,
-                "Expected INCORRECT_DELIMITER exception"
-        );
-    }    
+	        CensusAnalyserException exception = Assertions.assertThrows(
+	                CensusAnalyserException.class,
+	                () -> censusAnalyser.loadCensusData("src/test/resources/IndiaStateCensusDataWrongHeader.csv")
+	        );
+
+	        Assertions.assertEquals(CensusAnalyserException.ExceptionType.INCORRECT_HEADER, exception.type);
+	    }
+
 }
