@@ -6,7 +6,9 @@ public class CensusAnalyserException extends Exception {
         FILE_NOT_FOUND,
         INVALID_FILE_TYPE,
         UNABLE_TO_PARSE,
-        INCORRECT_DELIMITER
+        INCORRECT_DELIMITER,
+        INCORRECT_HEADER,
+        INCORRECT_TYPE
     }
 
     public ExceptionType type;

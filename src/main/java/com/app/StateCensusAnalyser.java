@@ -11,46 +11,40 @@ import com.app.exception.CensusAnalyserException;
 
 public class StateCensusAnalyser {
 
-    private List<CSVStateCensus> censusList = new ArrayList<>();
+	private List<CSVStateCensus> censusList = new ArrayList<>();
 
-    public Iterator<CSVStateCensus> loadCensusData(String csvFilePath) throws CensusAnalyserException {
-    	if (!csvFilePath.endsWith(".csv")) {
-            throw new CensusAnalyserException("Invalid file type. Expected CSV file.",
-                    CensusAnalyserException.ExceptionType.INVALID_FILE_TYPE);
-        }
+	public int loadCensusData(String csvFilePath) throws CensusAnalyserException {
+	    try (BufferedReader reader = new BufferedReader(new FileReader(csvFilePath))) {
+	        String headerLine = reader.readLine();
+	        if (headerLine == null) {
+	            throw new CensusAnalyserException("Empty file", CensusAnalyserException.ExceptionType.INCORRECT_HEADER);
+	        }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-            String line;
-            boolean headerSkipped = false;
-            while ((line = br.readLine()) != null) {
-                if (!headerSkipped) {  
-                    headerSkipped = true;
-                    continue;
-                }
-                
-                String[] data = line.split(",");
-                if (data.length != 4) {
-                    throw new CensusAnalyserException("Incorrect delimiter in file.",
-                            CensusAnalyserException.ExceptionType.INCORRECT_DELIMITER);
-                }
-                String state = data[0].trim().replaceAll("\"", "");
-                int population = Integer.parseInt(data[1].trim().replaceAll("\"", ""));
-                int area = Integer.parseInt(data[2].trim().replaceAll("\"", ""));
-                int density = Integer.parseInt(data[3].trim().replaceAll("\"", ""));
+	        String[] headers = headerLine.split(",");
+	        if (!headers[0].equals("State") || !headers[1].equals("Population")
+	                || !headers[2].equals("AreaInSqKm") || !headers[3].equals("DensityPerSqKm")) {
+	            throw new CensusAnalyserException("Incorrect header",
+	                    CensusAnalyserException.ExceptionType.INCORRECT_HEADER);
+	        }
+	        
+	        String line;
+	        while ((line = reader.readLine()) != null) {
+	            String[] data = line.split(",");
+	            CSVStateCensus census = new CSVStateCensus(
+	                    data[0].trim(),
+	                    Integer.parseInt(data[1].trim()),
+	                    Integer.parseInt(data[2].trim()),
+	                    Integer.parseInt(data[3].trim())
+	            );
+	            censusList.add(census);
+	        }
 
+	        return censusList.size();
+	    } catch (IOException e) {
+	        throw new CensusAnalyserException("File not found", CensusAnalyserException.ExceptionType.INCORRECT_HEADER);
+	    } catch (NumberFormatException e) {
+	        throw new CensusAnalyserException("Invalid number format", CensusAnalyserException.ExceptionType.INCORRECT_TYPE);
+	    }
+	}
 
-                CSVStateCensus census = new CSVStateCensus(state, population, area, density);
-                censusList.add(census);
-            }
-        } catch (IOException e) {
-            throw new CensusAnalyserException("File not found or cannot be opened",
-                    CensusAnalyserException.ExceptionType.FILE_NOT_FOUND);
-        }catch (CensusAnalyserException e) {
-            throw e;
-        }catch (Exception e) {
-            throw new CensusAnalyserException("Unable to parse CSV file",
-                    CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
-        }
-        return censusList.iterator();
-    }
 }
